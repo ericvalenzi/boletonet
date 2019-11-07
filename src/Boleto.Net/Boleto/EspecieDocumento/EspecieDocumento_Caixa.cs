@@ -55,7 +55,7 @@ namespace BoletoNet
             {
                 case EnumEspecieDocumento_Caixa.DuplicataMercantil: return "1";
                 case EnumEspecieDocumento_Caixa.NotaPromissoria : return "2";
-                case EnumEspecieDocumento_Caixa.DuplicataServico: return "3";
+                case EnumEspecieDocumento_Caixa.DuplicataServico: return "4";
                 case EnumEspecieDocumento_Caixa.NotaSeguro : return "5";
                 case EnumEspecieDocumento_Caixa.LetraCambio : return "6";
                 case EnumEspecieDocumento_Caixa.Outros: return "9";
@@ -69,7 +69,7 @@ namespace BoletoNet
             {
                 case "1": return EnumEspecieDocumento_Caixa.DuplicataMercantil;
                 case "2": return EnumEspecieDocumento_Caixa.NotaPromissoria;
-                case "3": return EnumEspecieDocumento_Caixa.DuplicataServico;
+                case "4": return EnumEspecieDocumento_Caixa.DuplicataServico;
                 case "5": return EnumEspecieDocumento_Caixa.NotaSeguro;
                 case "6": return EnumEspecieDocumento_Caixa.LetraCambio;
                 case "9": return EnumEspecieDocumento_Caixa.Outros;
@@ -83,7 +83,7 @@ namespace BoletoNet
             {
                 case "DM": return "1";
                 case "NP": return "2";
-                case "DS": return "3";
+                case "DS": return "4";
                 case "NS": return "5";
                 case "LC": return "6";
                 case "OU": return "9";

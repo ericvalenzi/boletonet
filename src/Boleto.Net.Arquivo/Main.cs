@@ -75,10 +75,10 @@ namespace BoletoNet.Arquivo
         //
         public void GeraDadosItau(TipoArquivo tipoArquivo)
         {
-            DateTime vencimento = new DateTime(2007, 9, 10);
+            DateTime vencimento = new DateTime(2019, 9, 10);
 
-            Instrucao_Itau item1 = new Instrucao_Itau(9, 5);
-            Instrucao_Itau item2 = new Instrucao_Itau(81, 10);
+            Instrucao_Itau item1 = new Instrucao_Itau(10);
+            //Instrucao_Itau item1 = new Instrucao_Itau(34, 10);
             Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "13000");
             //Na carteira 198 o código do Cedente é a conta bancária
             c.Codigo = "13000";
@@ -95,9 +95,9 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.CEP = "70000000";
             b.Sacado.Endereco.UF = "DF";
 
-            item2.Descricao += item2.QuantidadeDias.ToString() + " dias corridos do vencimento.";
+            //item2.Descricao += item2.QuantidadeDias.ToString() + " dias corridos do vencimento.";
             b.Instrucoes.Add(item1);
-            b.Instrucoes.Add(item2);
+            //b.Instrucoes.Add(item2);
             b.Cedente.ContaBancaria.DigitoAgencia = "1";
             b.Cedente.ContaBancaria.DigitoAgencia = "2";
 
@@ -118,9 +118,9 @@ namespace BoletoNet.Arquivo
             b2.Sacado.Endereco.CEP = "70000000";
             b2.Sacado.Endereco.UF = "DF";
 
-            item2.Descricao += item2.QuantidadeDias.ToString() + " dias corridos do vencimento.";
+            //item2.Descricao += item2.QuantidadeDias.ToString() + " dias corridos do vencimento.";
             b2.Instrucoes.Add(item1);
-            b2.Instrucoes.Add(item2);
+            //b2.Instrucoes.Add(item2);
             b2.Cedente.ContaBancaria.DigitoAgencia = "1";
             b2.Cedente.ContaBancaria.DigitoAgencia = "2";
 
@@ -135,11 +135,11 @@ namespace BoletoNet.Arquivo
                     break;
                 case TipoArquivo.CNAB400:
                     GeraArquivoCNAB400(b2.Banco, c, boletos);
-                    break;             
+                    break;
                 default:
                     break;
-            }            
-                
+            }
+
         }
         public void GeraDadosBanrisul()
         {
@@ -194,38 +194,41 @@ namespace BoletoNet.Arquivo
         public void GeraDadosSicredi()
         {
             ContaBancaria conta = new ContaBancaria();
-            conta.Agencia = "051";
-            conta.DigitoAgencia = "2";
-            conta.Conta = "13000";
+            conta.Agencia = "0710";
+            conta.DigitoAgencia = "0";
+            conta.Conta = "7914";
             conta.DigitoConta = "3";
+            conta.OperacaConta = "0";
             //
-            Cedente c = new Cedente();
+            Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "0710","7914","3");
             c.ContaBancaria = conta;
-            c.CPFCNPJ = "00000000000000";
-            c.Nome = "Empresa de Atacado";
+            //c.CPFCNPJ = "01.924.069/0001-74";
+            //c.Nome = "Empresa de Atacado";
             //Na carteira 198 o código do Cedente é a conta bancária
-            c.Codigo = "12345";//No Banrisul, esse código está no manual como 12 caracteres, por eu(sidneiklein) isso tive que alterar o tipo de int para string;
-            c.Convenio = 124522;
+            c.Codigo = "79143";//No Banrisul, esse código está no manual como 12 caracteres, por eu(sidneiklein) isso tive que alterar o tipo de int para string;
+            c.Convenio = 79143;
             //
             Boleto b = new Boleto();
             b.Cedente = c;
             //
             b.DataProcessamento = DateTime.Now;
+            b.DataDocumento = DateTime.Now;
             b.DataVencimento = DateTime.Now.AddDays(15);
             b.ValorBoleto = Convert.ToDecimal(2469.69);
             b.Carteira = "1";
-            b.VariacaoCarteira = "02";
-            b.NossoNumero = string.Empty; //"92082835"; //** Para o "Remessa.TipoDocumento = "06", não poderá ter NossoNúmero Gerado!
-            b.NumeroDocumento = "1008073";
+            //b.VariacaoCarteira = "02";            
+            b.DigitoNossoNumero = "8";
+            b.NossoNumero = "00200006"; //"92082835"; //** Para o "Remessa.TipoDocumento = "06", não poderá ter NossoNúmero Gerado!
+            b.NumeroDocumento = "000010379";
             //
-            b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
-            b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
-            b.Sacado.Endereco.Bairro = "Testando";
-            b.Sacado.Endereco.Cidade = "Testelândia";
-            b.Sacado.Endereco.CEP = "70000000";
-            b.Sacado.Endereco.UF = "RS";
+            b.Sacado = new Sacado("356.733.598-70", "Eric Filardi");
+            b.Sacado.Endereco.End = "Rua vito lilla";
+            b.Sacado.Endereco.Bairro = "Vila augusta";
+            b.Sacado.Endereco.Cidade = "Guarulhos";
+            b.Sacado.Endereco.CEP = "07025-040";
+            b.Sacado.Endereco.UF = "SP";
 
-            Instrucao_Sicredi item1 = new Instrucao_Sicredi(9, 5);
+            Instrucao_Sicredi item1 = new Instrucao_Sicredi(1, 0);
             b.Instrucoes.Add(item1);
             //b.Instrucoes.Add(item2);
             b.Banco = new Banco(748);
@@ -252,51 +255,91 @@ namespace BoletoNet.Arquivo
 
             DateTime vencimento = new DateTime(2003, 5, 15);
 
-            Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "2269", "130000946");
-            c.Codigo = "1795082";
+            Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "1319", "1300900","7");
+            c.Codigo = "9482822";
+            c.CodigoTransmissao = "";
+            c.ContaBancaria.DigitoAgencia = "";
+            c.DigCedente = null;
+            c.DigitoCedente = -1;
+            c.Carteira = null;
+            //c.CPFCNPJ = "01924069000174";
+            //c.ContaBancaria.DigitoConta = "7";
+            string[] t1 = new string[8] { "00000970-9", "00000971-7", "00000972-5", "00000973-3", "00000974-1", "00000975-0", "00000976-8", "00000977-6" };
+            string[] t2 = new string[8] { "000010256", "000010257", "000010258", "000010259", "000010260", "000010261", "000010262", "000010263" };
 
-            Boleto b = new Boleto(vencimento, 0.20m, "101", "566612457800", c);
+            for (int i = 0; i < 8; i++)
+            {
+                Boleto b = new Boleto
+                {
+                    NumeroDocumento = t2[i],
+                    Carteira = "101",
+                    NossoNumero = t1[i],
+                    Cedente = c,
+                    ValorBoleto = 113.6400m,
+                    Sacado = new Sacado
+                    {
+                        CPFCNPJ = "18.268.146/0001-88",
+                        Nome = "ARMAZENS VICTORIA LTDAEPP",
+                        Endereco = new Endereco
+                        {
+                            End = "VIA DAS TORRES S/N",
+                            Bairro = "DISTRITO INDUSTRIAL",
+                            Cidade = "CANDEIAS",
+                            CEP = "43813-100",
+                            UF = "BA"
+                        },
+                    },
+                    Banco = new Banco(033),
+                    DataVencimento = DateTime.Now,
+                    DataProcessamento = DateTime.Now,
+                    DataDocumento = DateTime.Now,
+                    PercMulta = 2.2728m,
+                    JurosMora = 0.0011m,
+                    TipoImpressao = "A",
+                    Remessa = null,
+                    ModalidadeCobranca = 0,
+                    Moeda = 9,
+                    ApenasRegistrar = false,
+                    QuantidadeMoeda = 1,
+                    LocalPagamento = "Até o vencimento, preferencialmente no ",
+                    BancoCarteira = null,
+                    Abatimento = 0,
+                    Aceite = "N",
+                    Avalista = null,
+                    CodJurosMora = "",
+                    Categoria = 0,
+                    DigitoNossoNumero = "",
+                    Especie = "R$",
+                    IOF = 0,
+                    JurosPermanente = false,
+                    NumeroControle = null,
+                    NumeroDiasBaixa = 0,
+                    NumeroParcela =0,
+                    OutrosAcrescimos =0 ,
+                    OutrosDescontos = 0,
+                    PercentualIOS = 0,
+                    PercJurosMora = 0,
+                    EspecieDocumento = new EspecieDocumento(33, "1")
+                };
+                b.EspecieDocumento = new EspecieDocumento_Santander("02");
+                boletos.Add(b);
+            }           
 
-            //NOSSO NÚMERO
-            //############################################################################################################################
-            //Número adotado e controlado pelo Cliente, para identificar o título de cobrança.
-            //Informação utilizada pelos Bancos para referenciar a identificação do documento objeto de cobrança.
-            //Poderá conter número da duplicata, no caso de cobrança de duplicatas, número de apólice, no caso de cobrança de seguros, etc.
-            //Esse campo é devolvido no arquivo retorno.
-            b.NumeroDocumento = "0282033";
-
-            b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
-            b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
-            b.Sacado.Endereco.Bairro = "Testando";
-            b.Sacado.Endereco.Cidade = "Testelândia";
-            b.Sacado.Endereco.CEP = "70000000";
-            b.Sacado.Endereco.UF = "DF";
-
-            //b.Instrucoes.Add("Não Receber após o vencimento");
-            //b.Instrucoes.Add("Após o Vencimento pague somente no Bradesco");
-            //b.Instrucoes.Add("Instrução 2");
-            //b.Instrucoes.Add("Instrução 3");
-
-            //Espécie Documento - [R] Recibo
-            b.EspecieDocumento = new EspecieDocumento_Santander("17");
-
-            boletos.Add(b);
-
-            GeraArquivoCNAB240(new Banco(33), c, boletos);
+            GeraArquivoCNAB400(new Banco(33), c, boletos, "9482822");
         }
         public void GeraDadosCaixa()
         {
             ContaBancaria conta = new ContaBancaria();
             conta.OperacaConta = "OPE";
-            conta.Agencia = "345";
-            conta.DigitoAgencia = "6";
-            conta.Conta = "87654321";
-            conta.DigitoConta = "0";
+            conta.Agencia = "3792";
+            conta.DigitoAgencia = "0";
+            conta.Conta = "1031";
+            conta.DigitoConta = "6";
             //
             Cedente c = new Cedente();
             c.ContaBancaria = conta;
-            c.CPFCNPJ = "00.000.000/0000-00";
-            c.Nome = "Empresa de Atacado";
+            c.CPFCNPJ = "01.924.069/0001-74";
+            c.Nome = "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA";
             //Na carteira 198 o código do Cedente é a conta bancária
             c.Codigo = String.Concat(conta.Agencia, conta.DigitoAgencia, conta.OperacaConta, conta.Conta, conta.DigitoConta); //Na Caixa, esse código está no manual como 16 caracteres AAAAOOOCCCCCCCCD;
             //
@@ -306,20 +349,20 @@ namespace BoletoNet.Arquivo
             b.DataProcessamento = DateTime.Now;
             b.DataVencimento = DateTime.Now.AddDays(15);
             b.ValorBoleto = Convert.ToDecimal(2469.69);
-            b.Carteira = "SR";
-            b.NossoNumero = "92082835";
-            b.NumeroDocumento = "1008073";
-            EspecieDocumento ED = new EspecieDocumento(104);
+            b.Carteira = "1";
+            b.NossoNumero = "0000000000006-0";
+            b.NumeroDocumento = "000010333";
+            EspecieDocumento ED = new EspecieDocumento(104,"0");
             b.EspecieDocumento = ED;
 
             //
-            b.Sacado = new Sacado("Fulano de Silva");
-            b.Sacado.CPFCNPJ = "000.000.000-00";
-            b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
-            b.Sacado.Endereco.Bairro = "Testando";
-            b.Sacado.Endereco.Cidade = "Testelândia";
-            b.Sacado.Endereco.CEP = "70000000";
-            b.Sacado.Endereco.UF = "RS";
+            //b.Sacado = new Sacado("Fulano de Silva");
+            //b.Sacado.CPFCNPJ = "000.000.000-00";
+            //b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
+            //b.Sacado.Endereco.Bairro = "Testando";
+            //b.Sacado.Endereco.Cidade = "Testelândia";
+            //b.Sacado.Endereco.CEP = "70000000";
+            //b.Sacado.Endereco.UF = "RS";
 
             Instrucao_Caixa item1 = new Instrucao_Caixa(9, 5);
             b.Instrucoes.Add(item1);
@@ -329,7 +372,7 @@ namespace BoletoNet.Arquivo
             #region Dados para Remessa:
             b.Remessa = new Remessa();
             b.Remessa.TipoDocumento = "2"; // SIGCB - SEM REGISTRO
-            b.Remessa.CodigoOcorrencia = string.Empty;
+            //b.Remessa.CodigoOcorrencia = string.Empty;
             #endregion
 
             //
@@ -384,80 +427,139 @@ namespace BoletoNet.Arquivo
 
             GeraArquivoCNAB400(b.Banco, c, boletos);
         }
-		public void GeraDadosBradesco(TipoArquivo tipoArquivo)
-		{
-			Cedente objCEDENTE = new Cedente(
-				   "12345678000155",
-				   "TESTE",
-				   "1111",
-				   "11234",
-				   "1"
-				   );
-			objCEDENTE.Codigo = "123456";
-			objCEDENTE.Convenio = 9;
+        public void GeraDadosBB()
+        {
+            Boletos boletos = new Boletos();
 
-			Instrucao_Bradesco item1 = new Instrucao_Bradesco(9, 5);
+            DateTime vencimento = new DateTime(2003, 5, 15);
 
-			//Instancia de Boleto
-			Boleto objBOLETO = new Boleto();
-			//O nosso-numero deve ser de 11 posi��es
-			objBOLETO.EspecieDocumento = new EspecieDocumento(237, "12");
-			objBOLETO.DataVencimento = DateTime.Now.AddDays(10);
-			objBOLETO.ValorBoleto = 90;
-			objBOLETO.Carteira = "09";
-			objBOLETO.NossoNumero = ("00000012345");
-			objBOLETO.Cedente = objCEDENTE;
-			//O num do documento deve ser de 10 posi��es
-			objBOLETO.NumeroDocumento = "1234567890";
-			objBOLETO.NumeroControle = "100";
-			//A data do documento � a data de emiss�o do boleto
-			objBOLETO.DataDocumento = DateTime.Now;
-			//A data de processamento � a data em que foi processado o documento, portanto � da data de emissao do boleto
-			objBOLETO.DataProcessamento = DateTime.Now;
-			objBOLETO.Sacado = new Sacado("12345678000255", "TESTE SACADO");
-			objBOLETO.Sacado.Endereco.End = "END SACADO";
-			objBOLETO.Sacado.Endereco.Bairro = "BAIRRO SACADO";
-			objBOLETO.Sacado.Endereco.Cidade = "CIDADE SACADO";
-			objBOLETO.Sacado.Endereco.CEP = "CEP SACADO";
-			objBOLETO.Sacado.Endereco.UF = "RR";
+            Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "2890", "1108933", "X");
+            c.Codigo = "2550661";
+            c.Convenio = 2550661;
+            c.CodigoTransmissao = "";
+            c.ContaBancaria.DigitoAgencia = "";
+            c.Carteira = "17-019";
+            //c.CPFCNPJ = "01924069000174";
+            //c.ContaBancaria.DigitoConta = "7";
+            string[] t1 = new string[2] { "25506610000000009", "25506610000000010" };
+            string[] t2 = new string[2] { "000010266", "000010267" };
 
-			objBOLETO.PercMulta = 10;
-			objBOLETO.JurosMora = 5;
-			objBOLETO.Instrucoes.Add(item1);
+            for (int i = 0; i < 2; i++)
+            {
+                Boleto b = new Boleto
+                {
+                    NumeroDocumento = t2[i],
+                    Carteira = "17-019",
+                    NossoNumero = t1[i],
+                    Cedente = c,
+                    ValorBoleto = 515.62m,
+                    Sacado = new Sacado
+                    {
+                        CPFCNPJ = "356.733.598-70",
+                        Nome = "ERIC VALENZI FILARDI",
+                        Endereco = new Endereco
+                        {
+                            End = "RUA VITO LILLA",
+                            Bairro = "VILA AUGUSTA",
+                            Cidade = "GUARULHOS",
+                            CEP = "07025-040",
+                            UF = "SP"
+                        },
+                    },
+                    Banco = new Banco(1),
+                    DataVencimento = DateTime.Now,
+                    DataProcessamento = DateTime.Now,
+                    DataDocumento = DateTime.Now,
+                    PercMulta = 10.3124m,
+                    JurosMora = 0.3437m,
+                    Remessa = new Remessa()
+                    {
+                        //NumeroLote = i,
+                        TipoDocumento = "06",
+                        CodigoOcorrencia = "01"
+                    }
+                };
+                b.EspecieDocumento = new EspecieDocumento_BancoBrasil("4");
+                b.Especie = "12";
+                boletos.Add(b);
+            }
+            //GeraArquivoCNAB400(new Banco(1), c, boletos, "2550661");
+            GeraArquivoCNAB240(new Banco(1), c, boletos);
+        }
+        public void GeraDadosBradesco(TipoArquivo tipoArquivo)
+        {
+            Cedente objCEDENTE = new Cedente(
+                   "12345678000155",
+                   "TESTE",
+                   "1111",
+                   "11234",
+                   "1"
+                   );
+            objCEDENTE.Codigo = "123456";
+            objCEDENTE.Convenio = 9;
 
-			objBOLETO.Banco = new Banco(237);
+            Instrucao_Bradesco item1 = new Instrucao_Bradesco(6, 5);
 
-			// nao precisa desta parte no boleto do brasdesco.
-			/*objBOLETO.Remessa = new Remessa()
+            //Instancia de Boleto
+            Boleto objBOLETO = new Boleto();
+            //O nosso-numero deve ser de 11 posi��es
+            objBOLETO.EspecieDocumento = new EspecieDocumento(237, "12");
+            objBOLETO.DataVencimento = DateTime.Now.AddDays(10);
+            objBOLETO.ValorBoleto = 90;
+            objBOLETO.Carteira = "09";
+            objBOLETO.NossoNumero = ("00000012345");
+            objBOLETO.Cedente = objCEDENTE;
+            //O num do documento deve ser de 10 posi��es
+            objBOLETO.NumeroDocumento = "1234567890";
+            objBOLETO.NumeroControle = "100";
+            //A data do documento � a data de emiss�o do boleto
+            objBOLETO.DataDocumento = DateTime.Now;
+            //A data de processamento � a data em que foi processado o documento, portanto � da data de emissao do boleto
+            objBOLETO.DataProcessamento = DateTime.Now;
+            objBOLETO.Sacado = new Sacado("12345678000255", "TESTE SACADO");
+            objBOLETO.Sacado.Endereco.End = "END SACADO";
+            objBOLETO.Sacado.Endereco.Bairro = "BAIRRO SACADO";
+            objBOLETO.Sacado.Endereco.Cidade = "CIDADE SACADO";
+            objBOLETO.Sacado.Endereco.CEP = "CEP SACADO";
+            objBOLETO.Sacado.Endereco.UF = "RR";
+
+            objBOLETO.PercMulta = 10;
+            objBOLETO.JurosMora = 5;
+            objBOLETO.Instrucoes.Add(item1);
+
+            objBOLETO.Banco = new Banco(237);
+
+            // nao precisa desta parte no boleto do brasdesco.
+            /*objBOLETO.Remessa = new Remessa()
             {
                 Ambiente = Remessa.TipoAmbiemte.Producao,
                 CodigoOcorrencia = "01",
             };*/
 
-			Boletos objBOLETOS = new Boletos();
-			objBOLETOS.Add(objBOLETO);
-			objBOLETOS.Add(objBOLETO);
+            Boletos objBOLETOS = new Boletos();
+            objBOLETOS.Add(objBOLETO);
+            objBOLETOS.Add(objBOLETO);
 
-			var mem = new MemoryStream();
-			var objREMESSA = new ArquivoRemessa(TipoArquivo.CNAB400);
+            var mem = new MemoryStream();
+            var objREMESSA = new ArquivoRemessa(TipoArquivo.CNAB400);
 
-			switch (tipoArquivo)
-			{
-				case TipoArquivo.CNAB240:
-					//GeraArquivoCNAB240(b2.Banco, c, boletos);
-					break;
-				case TipoArquivo.CNAB400:
-					GeraArquivoCNAB400(objBOLETO.Banco, objCEDENTE, objBOLETOS, "09");
-					break;
-				default:
-					break;
-			}
+            switch (tipoArquivo)
+            {
+                case TipoArquivo.CNAB240:
+                    //GeraArquivoCNAB240(b2.Banco, c, boletos);
+                    break;
+                case TipoArquivo.CNAB400:
+                    GeraArquivoCNAB400(objBOLETO.Banco, objCEDENTE, objBOLETOS, "09");
+                    break;
+                default:
+                    break;
+            }
 
-		}
-		#endregion Remessa
+        }
+        #endregion Remessa
 
-		#region Retorno
-		private void LerRetorno(int codigo)
+        #region Retorno
+        private void LerRetorno(int codigo)
         {
             try
             {
@@ -685,9 +787,13 @@ namespace BoletoNet.Arquivo
                     GeraDadosSicredi();
                 else if (radioButtonBNB.Checked)
                     GeraDadosBancoDoNordeste();
-				else if (radioButtonBradesco.Checked)
-					GeraDadosBradesco(TipoArquivo.CNAB400);
-			}
+                else if (radioButtonBradesco.Checked)
+                    GeraDadosBradesco(TipoArquivo.CNAB400);
+                else if (radioButtonSantander.Checked)
+                    GeraDadosSantander();
+                else if (radioButtonBancoBrasil.Checked)
+                    GeraDadosBB();
+            }
             else if (radioButtonCNAB240.Checked)
             {
                 if (radioButtonItau.Checked)
@@ -698,9 +804,11 @@ namespace BoletoNet.Arquivo
                     MessageBox.Show("Não Implementado!");
                 else if (radioButtonCaixa.Checked)
                     GeraDadosCaixa();
-				else if (radioButtonBradesco.Checked)
-					GeraDadosBradesco(TipoArquivo.CNAB240);
-			}
+                else if (radioButtonBradesco.Checked)
+                    GeraDadosBradesco(TipoArquivo.CNAB240);
+                else if (radioButtonBancoBrasil.Checked)
+                    GeraDadosBB();
+            }
         }
 
         private void lerToolStripMenuItem1_Click(object sender, EventArgs e)

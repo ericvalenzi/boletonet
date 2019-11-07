@@ -51,8 +51,9 @@ namespace Boleto.Net.MVC.Models
          * O nosso número tem que ter no máximo 11 posições.
          */
 
-            Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "1", "123456", "1");
-            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 0.01m, "16", "09876543210", c);
+            Cedente c = new Cedente("01.924.069/0001-74", "Empresa de Atacado", "2890", "8", "110893", "X");
+            c.Convenio = 2550661;
+            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 55.00m, "17-019", "25506610000000012", c);
 
             #endregion Exemplo Carteira 16, com nosso número de 11 posições
 
@@ -96,26 +97,26 @@ namespace Boleto.Net.MVC.Models
             #endregion Exemplo Carteira 18, convênio de 6 posições e tipo modalidade 21
 
 
-            b.NumeroDocumento = "12415487";
+            b.NumeroDocumento = "00007940";
 
-            b.Sacado = new Sacado("000.000.000-00", "Nome do seu Cliente ");
-            b.Sacado.Endereco.End = "Endereço do seu Cliente ";
-            b.Sacado.Endereco.Bairro = "Bairro";
-            b.Sacado.Endereco.Cidade = "Cidade";
-            b.Sacado.Endereco.CEP = "00000000";
-            b.Sacado.Endereco.UF = "UF";
+            b.Sacado = new Sacado("02.980.839/0001-69", "Aleff sistemas");
+            b.Sacado.Endereco.End = "Rua josephina mandotti";
+            b.Sacado.Endereco.Bairro = "Maia";
+            b.Sacado.Endereco.Cidade = "Guarulhos";
+            b.Sacado.Endereco.CEP = "07115080";
+            b.Sacado.Endereco.UF = "SP";
 
             //Adiciona as instruções ao boleto
             #region Instruções
-            //Protestar
-            Instrucao_BancoBrasil item = new Instrucao_BancoBrasil(9, 5);
-            b.Instrucoes.Add(item);
-            //ImportanciaporDiaDesconto
-            item = new Instrucao_BancoBrasil(30, 0);
-            b.Instrucoes.Add(item);
-            //ProtestarAposNDiasCorridos
-            item = new Instrucao_BancoBrasil(81, 15);
-            b.Instrucoes.Add(item);
+            ////Protestar
+            //Instrucao_BancoBrasil item = new Instrucao_BancoBrasil(9, 5);
+            //b.Instrucoes.Add(item);
+            ////ImportanciaporDiaDesconto
+            //item = new Instrucao_BancoBrasil(30, 0);
+            //b.Instrucoes.Add(item);
+            ////ProtestarAposNDiasCorridos
+            //item = new Instrucao_BancoBrasil(81, 15);
+            //b.Instrucoes.Add(item);
             #endregion Instruções
 
             boletoBancario.Boleto = b;
@@ -129,15 +130,15 @@ namespace Boleto.Net.MVC.Models
 
         public BoletoBancario Banrisul()
         {
-            DateTime vencimento = DateTime.Now.AddDays(10);
+            DateTime vencimento = Convert.ToDateTime("15/02/2019");
 
-            Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "5", "12345678", "9");
+            Cedente c = new Cedente("00.100.992/0001-29", "TRANSPORTES KOBRASOL EIRELI", "0515", "", "005864038", "3"); //60058640
 
-            c.Codigo = "00000000504";
+            c.Codigo = "0000005864038";
 
-            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 45.50m, "18", "12345678901", c);
+            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 5.60m, "1", "00000134", c);
 
-            b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
+            b.Sacado = new Sacado("11.550.874/0001-39", "TBT COM DE PAPAEIS EIREL");
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b.Sacado.Endereco.Bairro = "Testando";
             b.Sacado.Endereco.Cidade = "Testelândia";
@@ -147,14 +148,15 @@ namespace Boleto.Net.MVC.Models
             //Adiciona as instruções ao boleto
             #region Instruções
             //Protestar
-            Instrucao_Banrisul item = new Instrucao_Banrisul(9, 10, 0);
-            b.Instrucoes.Add(item);
+            //Instrucao_Banrisul item = new Instrucao_Banrisul(9, 10, 0);
+            //b.Instrucoes.Add(item);
             #endregion Instruções
 
-            b.NumeroDocumento = "12345678901";
+            b.NumeroDocumento = "00000033";
 
 
             boletoBancario.Boleto = b;
+            boletoBancario.Boleto.TipoModalidade = "40";
             boletoBancario.Boleto.Valida();
 
             return boletoBancario;
@@ -277,12 +279,12 @@ namespace Boleto.Net.MVC.Models
         {
             DateTime vencimento = DateTime.Now.AddDays(10);
 
-            Cedente c = new Cedente("000.000.000-00", "Boleto.net ILTDA", "1234", "12345678", "9");
+            Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "3792", "1031", "6");
 
-            c.Codigo = "112233";
+            c.Codigo = "943870";
 
 
-            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 20.00m, "2", "0123456789", c);
+            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 508.4300M, "1", "00000000000000004", c);
 
             b.Sacado = new Sacado("000.000.000-00", "Nome do seu Cliente ");
             b.Sacado.Endereco.End = "Endereço do seu Cliente ";
@@ -292,16 +294,16 @@ namespace Boleto.Net.MVC.Models
             b.Sacado.Endereco.UF = "UF";
 
             //Adiciona as instruções ao boleto
-            #region Instruções
-            Instrucao_Caixa item;
-            //ImportanciaporDiaDesconto
-            item = new Instrucao_Caixa((int)EnumInstrucoes_Caixa.Multa, Convert.ToDecimal(0.40));
-            b.Instrucoes.Add(item);
-            item = new Instrucao_Caixa((int)EnumInstrucoes_Caixa.JurosdeMora, Convert.ToDecimal(0.01));
-            b.Instrucoes.Add(item);
-            item = new Instrucao_Caixa((int)EnumInstrucoes_Caixa.NaoReceberAposNDias, 90);
-            b.Instrucoes.Add(item);
-            #endregion Instruções
+            //#region Instruções
+            //Instrucao_Caixa item;
+            ////ImportanciaporDiaDesconto
+            //item = new Instrucao_Caixa((int)EnumInstrucoes_Caixa.Multa, Convert.ToDecimal(0.40));
+            //b.Instrucoes.Add(item);
+            //item = new Instrucao_Caixa((int)EnumInstrucoes_Caixa.JurosdeMora, Convert.ToDecimal(0.01));
+            //b.Instrucoes.Add(item);
+            //item = new Instrucao_Caixa((int)EnumInstrucoes_Caixa.NaoReceberAposNDias, 90);
+            //b.Instrucoes.Add(item);
+            //#endregion Instruções
 
             EspecieDocumento_Caixa espDocCaixa = new EspecieDocumento_Caixa();
             b.EspecieDocumento = new EspecieDocumento_Caixa(espDocCaixa.getCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.DuplicataMercantil));
@@ -341,16 +343,16 @@ namespace Boleto.Net.MVC.Models
 
         public BoletoBancario Itau()
         {
-            DateTime vencimento = DateTime.Now.AddDays(1);
+            DateTime vencimento = DateTime.Now.AddDays(10);
 
             Instrucao_Itau item1 = new Instrucao_Itau(9, 5);
             Instrucao_Itau item2 = new Instrucao_Itau(81, 10);
-            Cedente c = new Cedente("10.823.650/0001-90", "SAFIRALIFE", "4406", "22324");
+            Cedente c = new Cedente("03.999.930/0001-99", "DIGGO TRANSPORTES e logistica", "3197", "6000", "1");
             //Na carteira 198 o código do Cedente é a conta bancária
-            c.Codigo = "13000";
+            c.Codigo = "60001";
 
-            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 0.1m, "176", "00000001", c, new EspecieDocumento(341, "1"));
-            b.NumeroDocumento = "00000001";
+            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 8.0m, "109", "00045509", c, new EspecieDocumento(341, "1"));
+            b.NumeroDocumento = "00045509";
 
             b.Sacado = new Sacado("000.000.000-00", "Nome do seu Cliente ");
             b.Sacado.Endereco.End = "Endereço do seu Cliente ";
@@ -366,7 +368,7 @@ namespace Boleto.Net.MVC.Models
             b.Instrucoes.Add(item1);
             b.Instrucoes.Add(item2);
 
-            // juros/descontos
+            //juros / descontos
 
             if (b.ValorDesconto == 0)
             {
@@ -449,10 +451,10 @@ namespace Boleto.Net.MVC.Models
         {
             DateTime vencimento = DateTime.Now.AddDays(10);
 
-            Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "2269", "130000946");
-            c.Codigo = "1795082";
+            Cedente c = new Cedente("26.430.486/0001-91", "AMR Cargas e emcomendas eireli", "1319", "13000900");
+            c.Codigo = "98482822";
 
-            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 0.20m, "101", "566612457800", c);
+            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 4.50m, "101", "000000001955", c);
 
             //NOSSO NÚMERO
             //############################################################################################################################
@@ -460,17 +462,17 @@ namespace Boleto.Net.MVC.Models
             //Informação utilizada pelos Bancos para referenciar a identificação do documento objeto de cobrança.
             //Poderá conter número da duplicata, no caso de cobrança de duplicatas, número de apólice, no caso de cobrança de seguros, etc.
             //Esse campo é devolvido no arquivo retorno.
-            b.NumeroDocumento = "0282033";
+            b.NumeroDocumento = "0000008";
 
-            b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
-            b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
-            b.Sacado.Endereco.Bairro = "Testando";
-            b.Sacado.Endereco.Cidade = "Testelândia";
-            b.Sacado.Endereco.CEP = "70000000";
-            b.Sacado.Endereco.UF = "DF";
+            b.Sacado = new Sacado("02.980.839/0001-69", "Aleff sistemas");
+            b.Sacado.Endereco.End = "Rua josephina mandotti";
+            b.Sacado.Endereco.Bairro = "Maia";
+            b.Sacado.Endereco.Cidade = "Guarulhos";
+            b.Sacado.Endereco.CEP = "07115080";
+            b.Sacado.Endereco.UF = "SP";
 
             //Espécie Documento - [R] Recibo
-            b.EspecieDocumento = new EspecieDocumento_Santander("17");
+            b.EspecieDocumento = new EspecieDocumento_Santander("2");
 
             boletoBancario.Boleto = b;
             boletoBancario.MostrarCodigoCarteira = true;
@@ -512,29 +514,39 @@ namespace Boleto.Net.MVC.Models
 
             DateTime vencimento = DateTime.Now.AddDays(1);
 
-            Instrucao_Sicredi item1 = new Instrucao_Sicredi(9, 5);
-            Instrucao_Sicredi item2 = new Instrucao_Sicredi();
+            //Instrucao_Sicredi item1 = new Instrucao_Sicredi(9, 5);
+            //Instrucao_Sicredi item2 = new Instrucao_Sicredi();
 
-            Cedente c = new Cedente("10.823.650/0001-90", "SAFIRALIFE", "0811", "81111");
-            c.Codigo = "08111081111";
-
-            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 0.1m, "1", "00000001", c);
-            b.NumeroDocumento = "00000001";
-
-            b.Sacado = new Sacado("000.000.000-00", "Nome do seu Cliente ");
-            b.Sacado.Endereco.End = "Endereço do seu Cliente ";
-            b.Sacado.Endereco.Bairro = "Bairro";
-            b.Sacado.Endereco.Cidade = "Cidade";
-            b.Sacado.Endereco.CEP = "00000000";
-            b.Sacado.Endereco.UF = "UF";
-
-            // Exemplo de como adicionar mais informações ao sacado
-            b.Sacado.InformacoesSacado.Add(new InfoSacado("TÍTULO: " + "2541245"));
-
-            item2.Descricao += " " + item1.QuantidadeDias.ToString() + " dias corridos do vencimento.";
-            b.Instrucoes.Add(item1);
+            Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "0710", "07914","3");
+            c.Codigo = "07914";
+            c.ContaBancaria = new ContaBancaria
+            {
+                Agencia = "0710",
+                Conta = "07914",
+                DigitoAgencia = "",
+                DigitoConta = "3",
+                OperacaConta = "68"
+            };
 
 
+            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 0.1m, "1", "000011", c);
+            b.NumeroDocumento = "000011";
+
+
+
+            //b.Sacado = new Sacado("356.733.598-70", "Eric Filardi");
+            //b.Sacado.Endereco.End = "Endereço do seu Cliente";
+            //b.Sacado.Endereco.Bairro = "Bairro";
+            //b.Sacado.Endereco.Cidade = "Cidade";
+            //b.Sacado.Endereco.CEP = "00000000";
+            //b.Sacado.Endereco.UF = "UF";
+
+
+            //// Exemplo de como adicionar mais informações ao sacado
+            //b.Sacado.InformacoesSacado.Add(new InfoSacado("TÍTULO: " + "2541245"));
+
+            //item2.Descricao += " " + item1.QuantidadeDias.ToString() + " dias corridos do vencimento.";
+            //b.Instrucoes.Add(item1);
 
             boletoBancario.Boleto = b;
             boletoBancario.Boleto.Valida();

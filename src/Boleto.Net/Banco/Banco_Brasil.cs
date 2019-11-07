@@ -1915,7 +1915,7 @@ namespace BoletoNet
                 // Campo não criticado pelo sistema, informar ZEROS ou nº da versão do layout do arquivo que foi utilizado
                 // para a formatação dos campos.
                 // Como não sei onde pegar esse nº, deixei como padrão.
-                _header += "050";
+                _header += "083";
                 _header += "00000";
                 _header += _brancos20;
                 _header += _brancos20;

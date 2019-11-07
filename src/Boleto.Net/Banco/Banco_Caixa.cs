@@ -30,6 +30,7 @@ namespace BoletoNet
         private bool _desconto;
         private int _diasProtesto;
         private int _diasDevolucao;
+        private decimal _valorTotal = 0;
 
         internal Banco_Caixa()
         {
@@ -164,7 +165,7 @@ namespace BoletoNet
                 //Cobrança sem registro. 
                 //Cobrança sem registro, nosso número com 16 dígitos. 
                 //Cobrança simples 
-                
+
                 //Posição 30
                 string primeiraConstante = (boleto.Carteira == CarteiraSR || boleto.Carteira.Equals("SR")) ? "2" : boleto.Carteira;
 
@@ -586,7 +587,10 @@ namespace BoletoNet
 
         public override string GerarDetalheSegmentoRRemessa(Boleto boleto, int numeroRegistroDetalhe, TipoArquivo CNAB240)
         {
-            return GerarDetalheSegmentoRRemessaCNAB240(boleto, numeroRegistroDetalhe, CNAB240);
+            if (boleto.Remessa.TipoDocumento.Equals("2") || boleto.Remessa.TipoDocumento.Equals("1"))
+                return GerarDetalheSegmentoRRemessaCNAB240SIGCB(boleto, numeroRegistroDetalhe, CNAB240);
+            else
+                return GerarDetalheSegmentoRRemessaCNAB240(boleto, numeroRegistroDetalhe, CNAB240);
         }
 
         public override string GerarTrailerLoteRemessa(int numeroRegistro, Boleto boletos)
@@ -1146,7 +1150,8 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAAAA_________, 0144, 008, 0, DateTime.Now, ' '));                                 // posição 144 até 151 (8) - Data de Geração do Arquivo
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediHoraHHMMSS___________, 0152, 006, 0, DateTime.Now, ' '));                                 // posição 152 até 157 (6) - Hora de Geração do Arquivo
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0158, 006, 0, cedente.NumeroSequencial, '0'));                     // posição 158 até 163 (6) - Número Seqüencial do Arquivo
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0164, 003, 0, "050", '0'));                                        // posição 164 até 166 (3) - Nro da Versão do Layout do Arquivo
+                //Nova versão segundo manual = 101 ericvalenzi
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0164, 003, 0, "101", '0'));                                        // posição 164 até 166 (3) - Nro da Versão do Layout do Arquivo
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0167, 005, 0, "0", '0'));                                          // posição 167 até 171 (5) - Densidade de Gravação do Arquivo
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0172, 020, 0, string.Empty, ' '));                                 // posição 172 até 191 (20)- Para Uso Reservado do Banco
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0192, 020, 0, "REMESSA-PRODUCAO", ' '));                           // posição 192 até 211 (20)- Para Uso Reservado da Empresa
@@ -1176,7 +1181,8 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0009, 001, 0, "R", ' '));                                           // posição 9 até 9     (1) - Tipo de Operação
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0010, 002, 0, "01", '0'));                                          // posição 10 até 11   (2) - Tipo de Serviço
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0012, 002, 0, "00", '0'));                                          // posição 12 até 13   (2) - Uso Exclusivo FEBRABAN/CNAB
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0014, 003, 0, "030", '0'));                                         // posição 14 até 16   (3) - Nº da Versão do Layout do Lote
+                //Nova versão segundo manual = 060 ericvalenzi
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0014, 003, 0, "060", '0'));                                         // posição 14 até 16   (3) - Nº da Versão do Layout do Lote
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0017, 001, 0, string.Empty, ' '));                                  // posição 17 até 17   (1) - Uso Exclusivo FEBRABAN/CNAB
                 #region Regra Tipo de Inscrição Cedente
                 string vCpfCnpjEmi = "0";//não informado
@@ -1288,6 +1294,7 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0074, 004, 0, string.Empty, ' '));                                  // posição 74 até 77   (4) - Uso Exclusivo CAIXA
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAAAA_________, 0078, 008, 0, boleto.DataVencimento, ' '));                         // posição 78 até 85   (8) - Data de Vencimento do Título
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0086, 015, 2, boleto.ValorBoleto, '0'));                            // posição 86 até 100  (15)- Valor Nominal do Título
+                _valorTotal = _valorTotal + boleto.ValorBoleto;
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0101, 005, 2, "0", '0'));//0sistema atribui AEC pelo CEP do sacado  // posição 101 até 105 (5) - AEC = Agência Encarregada da Cobrança
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0106, 001, 0, "0", '0'));                                           // posição 106 até 106 (1) - Campo 23.3P Dígito Verificador da Agência Preencher '0'
                 string EspDoc = boleto.EspecieDocumento.Sigla.Equals("DM") ? "02" : boleto.EspecieDocumento.Codigo;
@@ -1309,8 +1316,8 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0151, 015, 2, boleto.ValorDesconto, '0'));                          // posição 151 até 165 (15)- Valor/Percentual a ser Concedido
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0166, 015, 2, boleto.IOF, '0'));                                    // posição 166 até 180 (15)- Valor do IOF a ser concedido
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0181, 015, 2, boleto.Abatimento, '0'));                             // posição 181 até 195 (15)- Valor do Abatimento
-                //Alterado por diegodariolli 16/03/2018 - acredito que para controle interno do software deve ser informado aqui o número de controle e não o número do documento, já informado anteriormente
-				reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0196, 025, 0, boleto.NumeroControle, ' '));                        // posição 196 até 220 (25)- Identificação do Título na Empresa. Informar o Número do Documento - Seu Número (mesmo das posições 63-73 do Segmento P)
+                                                                                                                                                                    //Alterado por diegodariolli 16/03/2018 - acredito que para controle interno do software deve ser informado aqui o número de controle e não o número do documento, já informado anteriormente
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0196, 025, 0, boleto.NumeroControle, ' '));                        // posição 196 até 220 (25)- Identificação do Título na Empresa. Informar o Número do Documento - Seu Número (mesmo das posições 63-73 do Segmento P)
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0221, 001, 0, (_protestar ? "1" : "3"), '0'));                       // posição 221 até 221 (1) -  Código para protesto  - ?1? = Protestar. "3" = Não Protestar. "9" = Cancelamento Protesto Automático
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0222, 002, 0, _diasProtesto, '0'));                                  // posição 222 até 223 (2) -  Número de Dias para Protesto                
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0224, 001, 0, (_baixaDevolver ? "1" : "2"), '0'));                   // posição 224 até 224 (1) -  Código para Baixa/Devolução ?1? = Baixar / Devolver. "2" = Não Baixar / Não Devolver
@@ -1363,7 +1370,7 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0154, 001, 0, "0", '0'));                                          // posição 154 até 154 (1) - Tipo de Inscrição Sacador Avalialista
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0155, 015, 0, "0", '0'));                                          // posição 155 até 169 (15)- Inscrição Sacador Avalialista
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0170, 040, 0, string.Empty, ' '));                                 // posição 170 até 209 (40)- Nome do Sacador/Avalista
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0210, 003, 0, string.Empty, ' '));                                          // posição 210 até 212 (3) - Cód. Bco. Corresp. na Compensação
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0210, 003, 0, string.Empty, '0'));                                 // posição 210 até 212 (3) - Cód. Bco. Corresp. na Compensação
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0213, 020, 0, string.Empty, ' '));                                 // posição 213 até 232 (20)- Nosso Nº no Banco Correspondente
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0233, 008, 0, string.Empty, ' '));                                 // posição 213 até 232 (8)- Uso Exclusivo FEBRABAN/CNAB
                 reg.CodificarLinha();
@@ -1464,7 +1471,9 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0018, 006, 0, numeroRegistro, '0'));                                  // posição 18 até 23   (6) - Quantidade de Registros no Lote
                 #endregion
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0024, 006, 0, "0", '0'));                                           // posição 24 até 29   (6) - Quantidade de Títulos em Cobrança
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0030, 017, 2, "0", '0'));                                           // posição 30 até 46  (15) - Valor Total dos Títulos em Carteiras
+                //ericvalenzi
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0030, 017, 2, _valorTotal, '0'));
+                //reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0030, 017, 2, "0", '0'));                                           // posição 30 até 46  (15) - Valor Total dos Títulos em Carteiras
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0047, 006, 0, "0", '0'));                                           // posição 47 até 52   (6) - Quantidade de Títulos em Cobrança
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0053, 017, 2, "0", '0'));                                           // posição 53 até 69   (15) - Valor Total dos Títulos em Carteiras                
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0070, 006, 0, "0", '0'));                                           // posição 70 até 75   (6) - Quantidade de Títulos em Cobrança

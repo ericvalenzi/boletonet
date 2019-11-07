@@ -273,7 +273,7 @@ namespace BoletoNet
                     #region FGGGG.GGHHHZ
 
                     string F = agencia.Substring(3, 1);
-                    string GGGGGG = boleto.Cedente.ContaBancaria.Conta + boleto.Cedente.ContaBancaria.DigitoConta;
+                    string GGGGGG = boleto.Cedente.ContaBancaria.Conta.PadLeft(5,'0') + boleto.Cedente.ContaBancaria.DigitoConta;
                     string HHH = "000";
                     string Z = Mod10(F + GGGGGG + HHH).ToString();
 
@@ -1255,7 +1255,7 @@ namespace BoletoNet
                 // a) 2o e 3o descontos: para de operar com mais de um desconto(depende de cadastramento prévio do 
                 // indicador 19.0 pelo Banco Itaú, conforme item 5)
                 // b) Mensagens ao sacado: se utilizados as instruções 93 ou 94 (Nota 11), transcrever a mensagem desejada
-                _detalhe += Utils.FitStringLength(boleto.Sacado.Nome, 30, 30, ' ', 0, true, true, false).ToUpper();
+                _detalhe += Utils.FitStringLength("", 30, 30, ' ', 0, true, true, false).ToUpper();
                 _detalhe += "    "; // Complemento do registro
                 _detalhe += boleto.DataVencimento.ToString("ddMMyy");
                 // PRAZO - Quantidade de DIAS - ver nota 11(A) - depende das instruções de cobrança 
@@ -1510,51 +1510,52 @@ namespace BoletoNet
             try
             {
                 string _registroOpcional = "";
-                //detalhe                           (tamanho,tipo) A= Alfanumerico, N= Numerico
-                _registroOpcional = "2"; //Identificação do Registro         (1, N)
-
-                //Mensagem 1 (80, A)
-                if (boleto.Instrucoes != null && boleto.Instrucoes.Count > 0)
-                    _registroOpcional += boleto.Instrucoes[0].Descricao.PadRight(80, ' ').Substring(0, 80);
-                else
-                    _registroOpcional += new string(' ', 80);
-
-                //Mensagem 2 (80, A)
-                if (boleto.Instrucoes != null && boleto.Instrucoes.Count > 1)
-                    _registroOpcional += boleto.Instrucoes[1].Descricao.PadRight(80, ' ').Substring(0, 80);
-                else
-                    _registroOpcional += new string(' ', 80);
-
-                //Mensagem 3 (80, A)
-                if (boleto.Instrucoes != null && boleto.Instrucoes.Count > 2)
-                    _registroOpcional += boleto.Instrucoes[2].Descricao.PadRight(80, ' ').Substring(0, 80);
-                else
-                    _registroOpcional += new string(' ', 80);
-
-                //Mensagem 4 (80, A)
-                if (boleto.Instrucoes != null && boleto.Instrucoes.Count > 3)
-                    _registroOpcional += boleto.Instrucoes[3].Descricao.PadRight(80, ' ').Substring(0, 80);
-                else
-                    _registroOpcional += new string(' ', 80);
-
-                _registroOpcional += new string(' ', 6); //Data limite para concessão de Desconto 2 (6, N) DDMMAA
-                _registroOpcional += new string(' ', 13);//Valor do Desconto (13, N) 
-                _registroOpcional += new string(' ', 6);//Data limite para concessão de Desconto 3 (6, N) DDMMAA
-                _registroOpcional += new string(' ', 13);//Valor do Desconto (13, N)
-                _registroOpcional += new string(' ', 7);//Reserva (7, A)
-                _registroOpcional += Utils.FitStringLength(boleto.Carteira, 3, 3, '0', 0, true, true, true); //Carteira (3, N)
-                _registroOpcional += Utils.FitStringLength(boleto.Cedente.ContaBancaria.Agencia, 5, 5, '0', 0, true, true, true); //Agência (5, N) 
-                _registroOpcional += Utils.FitStringLength(boleto.Cedente.ContaBancaria.Conta, 7, 7, '0', 0, true, true, true); //Conta Corrente (7, N)
-                _registroOpcional += Utils.FitStringLength(boleto.Cedente.ContaBancaria.DigitoConta, 1, 1, '0', 0, true, true, true); //Dígito C/C (1, A)
-                _registroOpcional += Utils.FitStringLength(boleto.NossoNumero, 11, 11, '0', 0, true, true, true); //Nosso Número (11, N)
-                _registroOpcional += Utils.FitStringLength("0", 1, 1, '0', 0, true, true, true); //DAC Nosso Número (1, A)
-
-                //Nº Seqüencial do Registro (06, N)
-                _registroOpcional += Utils.FitStringLength(numeroRegistro.ToString(), 6, 6, '0', 0, true, true, true);
-
-                _registroOpcional = Utils.SubstituiCaracteresEspeciais(_registroOpcional);
-
                 return _registroOpcional;
+                ////detalhe                           (tamanho,tipo) A= Alfanumerico, N= Numerico
+                //_registroOpcional = "2"; //Identificação do Registro         (1, N)
+
+                ////Mensagem 1 (80, A)
+                //if (boleto.Instrucoes != null && boleto.Instrucoes.Count > 0)
+                //    _registroOpcional += boleto.Instrucoes[0].Descricao.PadRight(80, ' ').Substring(0, 80);
+                //else
+                //    _registroOpcional += new string(' ', 80);
+
+                ////Mensagem 2 (80, A)
+                //if (boleto.Instrucoes != null && boleto.Instrucoes.Count > 1)
+                //    _registroOpcional += boleto.Instrucoes[1].Descricao.PadRight(80, ' ').Substring(0, 80);
+                //else
+                //    _registroOpcional += new string(' ', 80);
+
+                ////Mensagem 3 (80, A)
+                //if (boleto.Instrucoes != null && boleto.Instrucoes.Count > 2)
+                //    _registroOpcional += boleto.Instrucoes[2].Descricao.PadRight(80, ' ').Substring(0, 80);
+                //else
+                //    _registroOpcional += new string(' ', 80);
+
+                ////Mensagem 4 (80, A)
+                //if (boleto.Instrucoes != null && boleto.Instrucoes.Count > 3)
+                //    _registroOpcional += boleto.Instrucoes[3].Descricao.PadRight(80, ' ').Substring(0, 80);
+                //else
+                //    _registroOpcional += new string(' ', 80);
+
+                //_registroOpcional += new string(' ', 6); //Data limite para concessão de Desconto 2 (6, N) DDMMAA
+                //_registroOpcional += new string(' ', 13);//Valor do Desconto (13, N) 
+                //_registroOpcional += new string(' ', 6);//Data limite para concessão de Desconto 3 (6, N) DDMMAA
+                //_registroOpcional += new string(' ', 13);//Valor do Desconto (13, N)
+                //_registroOpcional += new string(' ', 7);//Reserva (7, A)
+                //_registroOpcional += Utils.FitStringLength(boleto.Carteira, 3, 3, '0', 0, true, true, true); //Carteira (3, N)
+                //_registroOpcional += Utils.FitStringLength(boleto.Cedente.ContaBancaria.Agencia, 5, 5, '0', 0, true, true, true); //Agência (5, N) 
+                //_registroOpcional += Utils.FitStringLength(boleto.Cedente.ContaBancaria.Conta, 7, 7, '0', 0, true, true, true); //Conta Corrente (7, N)
+                //_registroOpcional += Utils.FitStringLength(boleto.Cedente.ContaBancaria.DigitoConta, 1, 1, '0', 0, true, true, true); //Dígito C/C (1, A)
+                //_registroOpcional += Utils.FitStringLength(boleto.NossoNumero, 11, 11, '0', 0, true, true, true); //Nosso Número (11, N)
+                //_registroOpcional += Utils.FitStringLength("0", 1, 1, '0', 0, true, true, true); //DAC Nosso Número (1, A)
+
+                ////Nº Seqüencial do Registro (06, N)
+                //_registroOpcional += Utils.FitStringLength(numeroRegistro.ToString(), 6, 6, '0', 0, true, true, true);
+
+                //_registroOpcional = Utils.SubstituiCaracteresEspeciais(_registroOpcional);
+
+                //return _registroOpcional;
             }
             catch (Exception ex)
             {
