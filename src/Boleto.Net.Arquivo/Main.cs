@@ -354,6 +354,8 @@ namespace BoletoNet.Arquivo
             b.NumeroDocumento = "000010333";
             EspecieDocumento ED = new EspecieDocumento(104,"0");
             b.EspecieDocumento = ED;
+            b.ValorMulta = Convert.ToDecimal(2.55);
+            b.DataMulta = b.DataVencimento;
 
             //
             //b.Sacado = new Sacado("Fulano de Silva");

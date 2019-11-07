@@ -12,6 +12,7 @@ using System.Net.Mime;
 using System.Reflection;
 using System.Text;
 using System.Web.UI;
+using NReco.PdfGenerator;
 
 [assembly: WebResource("BoletoNet.BoletoImpressao.BoletoNet.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("BoletoNet.Imagens.barra.gif", "image/gif")]
@@ -42,9 +43,13 @@ namespace BoletoNet
         private string _instrucoesHtml = string.Empty;
         private bool _mostrarCodigoCarteira = false;
         private bool _formatoCarne = false;
+        private bool _formatoPropaganda = false;
+        private string _imagemPropaganda = "";
         private bool _ajustaTamanhoFonte = false;
         private bool _removeSimboloMoedaValorDocumento = false;
         private string _ajustaTamanhoFonteHtml;
+        private bool _ajustaFamiliaFonte = false;
+        private string _ajustaFamiliaFonteHtml;
         #endregion Variaveis
 
         #region Propriedades
@@ -84,6 +89,24 @@ namespace BoletoNet
         {
             get { return _formatoCarne; }
             set { _formatoCarne = value; }
+        }
+
+        /// <summary>
+        /// exibe o boleto no formato de propaganda
+        /// </summary>
+        [Browsable(true), Description("Formata o boleto no layout de propaganda")]
+        public bool FormatoPropaganda {
+            get { return _formatoPropaganda; }
+            set { _formatoPropaganda = value; }
+        }
+
+        /// <summary>
+        /// string base64 da imagem
+        /// </summary>
+        [Browsable(true), Description("string base64 da imagem")]
+        public string ImagemPropaganda {
+            get { return _imagemPropaganda; }
+            set { _imagemPropaganda = value; }
         }
 
         [Browsable(false)]
@@ -317,6 +340,26 @@ namespace BoletoNet
             _ajustaTamanhoFonteHtml = html.ToString().Replace("$1", "{").Replace("$2", "}");
         }
 
+        public void AjustaFamiliaFonte(String familiaFonte)
+        {
+            _ajustaFamiliaFonte = true;
+
+            var html = new StringBuilder();
+
+            html.AppendLine("<style>");
+            html.AppendFormat(".cp$1 font-family: {0} !important; $2", familiaFonte);
+            html.AppendFormat(".ti$1 font-family: {0} !important; $2", familiaFonte);
+            html.AppendFormat(".ld$1 font-family: {0} !important; $2", familiaFonte);
+            html.AppendFormat(".ct$1 font-family: {0} !important; $2", familiaFonte);
+            html.AppendFormat(".cn$1 font-family: {0} !important; $2", familiaFonte);
+            html.AppendFormat(".bc$1 font-family: {0} !important; $2", familiaFonte);
+            html.AppendFormat(".cpN$1 font-family: {0} !important; $2", familiaFonte);
+            html.AppendFormat(".ctN$1 font-family: {0} !important; $2", familiaFonte);
+            html.AppendFormat(".rc6 .t$1 font-family: {0} !important; $2", familiaFonte);
+            html.AppendFormat(".rc6 .c$1 font-family: {0} !important; $2", familiaFonte);
+            html.Append("</style>");
+            _ajustaFamiliaFonteHtml = html.ToString().Replace("$1", "{").Replace("$2", "}");
+        }
 
         #region Html
         public string GeraHtmlInstrucoes()
@@ -348,6 +391,16 @@ namespace BoletoNet
             html.Append(Html.Carne);
 
             return html.ToString()
+                .Replace("#BOLETO#", htmlBoleto);
+        }
+        //aqui
+        private string GeraHtmlPropaganda(string htmlBoleto)
+        {
+            var html = new StringBuilder();
+
+            html.Append(Html.Propaganda);
+            return html.ToString()
+                .Replace("@INSTRUCOES", _instrucoesHtml)
                 .Replace("#BOLETO#", htmlBoleto);
         }
         public string GeraHtmlReciboSacado()
@@ -529,6 +582,15 @@ namespace BoletoNet
             {
                 html.Append(_ajustaTamanhoFonteHtml);
             }
+            if(_ajustaFamiliaFonte)
+            {
+                html.Append(_ajustaFamiliaFonteHtml);
+            }
+
+            if (FormatoPropaganda)
+            {
+                html.Append(string.Format("<img src='data:image/png;base64, {0}' />", ImagemPropaganda));
+            }
 
             //Oculta o cabeçalho das instruções do boleto
             if (!OcultarInstrucoes)
@@ -576,7 +638,7 @@ namespace BoletoNet
                 html = html.Replace("@ITENSDEMONSTRATIVO", grupoDemonstrativo.ToString());
             }
 
-            if (!FormatoCarne)
+            if (!FormatoCarne && !FormatoPropaganda)
             {
                 //Mostra o comprovante de entrega
                 if (MostrarComprovanteEntrega | MostrarComprovanteEntregaLivre)
@@ -739,7 +801,19 @@ namespace BoletoNet
                 }
             }
 
-            html.Append(!FormatoCarne ? GeraHtmlReciboCedente() : GeraHtmlCarne(GeraHtmlReciboCedente()));
+            ///formatação do recibo do centende
+            if (FormatoCarne){
+                html.Append(GeraHtmlCarne(GeraHtmlReciboCedente()));
+            }
+            else if (FormatoPropaganda)
+            {
+                html.Append(GeraHtmlPropaganda(GeraHtmlReciboCedente()));
+            }
+            else{
+                html.Append(GeraHtmlReciboCedente());
+            }
+
+            //html.Append(!FormatoCarne ? !FormatoPropaganda ? GeraHtmlReciboCedente() : GeraHtmlPropaganda(GeraHtmlReciboCedente()) : GeraHtmlCarne(GeraHtmlReciboCedente()));
 
             string dataVencimento = Boleto.DataVencimento.ToString("dd/MM/yyyy");
 
@@ -756,6 +830,7 @@ namespace BoletoNet
                 //.Replace("@URLIMAGEMBARRAINTERNA", urlImagemBarraInterna)
                 //.Replace("@URLIMAGEMCORTE", urlImagemCorte)
                 //.Replace("@URLIMAGEMPONTO", urlImagemPonto)
+                .Replace("@NOMEBANCO", Boleto.Banco.Nome)
                 .Replace("@URLIMAGEMLOGO", urlImagemLogo)
                 .Replace("@URLIMGCEDENTE", vLocalLogoCedente)
                 .Replace("@URLIMAGEMBARRA", urlImagemBarra)
@@ -1324,6 +1399,7 @@ namespace BoletoNet
         public byte[] MontaBytesPDF(bool convertLinhaDigitavelToImage = false)
         {
             var converter = new NReco.PdfGenerator.HtmlToPdfConverter();
+            converter.Margins = new PageMargins(){ Bottom = 0, Top = 0, Left = 0, Right = 0};
 
             if (!string.IsNullOrWhiteSpace(TempFilesPath))
             {
