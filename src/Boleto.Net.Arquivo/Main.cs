@@ -65,7 +65,7 @@ namespace BoletoNet.Arquivo
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 ArquivoRemessa arquivo = new ArquivoRemessa(TipoArquivo.CNAB240);
-                arquivo.GerarArquivoRemessa("1200303001417053", banco, cedente, boletos, saveFileDialog.OpenFile(), 1);
+                arquivo.GerarArquivoRemessa(cedente.Convenio.ToString(), banco, cedente, boletos, saveFileDialog.OpenFile(), 1);
 
                 MessageBox.Show("Arquivo gerado com sucesso!", "Teste",
                                 MessageBoxButtons.OK,
@@ -195,12 +195,12 @@ namespace BoletoNet.Arquivo
         {
             ContaBancaria conta = new ContaBancaria();
             conta.Agencia = "0710";
-            conta.DigitoAgencia = "0";
+            conta.DigitoAgencia = "5";
             conta.Conta = "7914";
             conta.DigitoConta = "3";
-            conta.OperacaConta = "0";
+            conta.OperacaConta = "68";
             //
-            Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "0710","7914","3");
+            Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "0710", "7914", "3");
             c.ContaBancaria = conta;
             //c.CPFCNPJ = "01.924.069/0001-74";
             //c.Nome = "Empresa de Atacado";
@@ -218,7 +218,7 @@ namespace BoletoNet.Arquivo
             b.Carteira = "1";
             //b.VariacaoCarteira = "02";            
             b.DigitoNossoNumero = "8";
-            b.NossoNumero = "00200006"; //"92082835"; //** Para o "Remessa.TipoDocumento = "06", não poderá ter NossoNúmero Gerado!
+            b.NossoNumero = "19200013"; //"92082835"; //** Para o "Remessa.TipoDocumento = "06", não poderá ter NossoNúmero Gerado!
             b.NumeroDocumento = "000010379";
             //
             b.Sacado = new Sacado("356.733.598-70", "Eric Filardi");
@@ -255,7 +255,7 @@ namespace BoletoNet.Arquivo
 
             DateTime vencimento = new DateTime(2003, 5, 15);
 
-            Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "1319", "1300900","7");
+            Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "1319", "1300900", "7");
             c.Codigo = "9482822";
             c.CodigoTransmissao = "";
             c.ContaBancaria.DigitoAgencia = "";
@@ -314,8 +314,8 @@ namespace BoletoNet.Arquivo
                     JurosPermanente = false,
                     NumeroControle = null,
                     NumeroDiasBaixa = 0,
-                    NumeroParcela =0,
-                    OutrosAcrescimos =0 ,
+                    NumeroParcela = 0,
+                    OutrosAcrescimos = 0,
                     OutrosDescontos = 0,
                     PercentualIOS = 0,
                     PercJurosMora = 0,
@@ -323,7 +323,7 @@ namespace BoletoNet.Arquivo
                 };
                 b.EspecieDocumento = new EspecieDocumento_Santander("02");
                 boletos.Add(b);
-            }           
+            }
 
             GeraArquivoCNAB400(new Banco(33), c, boletos, "9482822");
         }
@@ -352,7 +352,7 @@ namespace BoletoNet.Arquivo
             b.Carteira = "1";
             b.NossoNumero = "0000000000006-0";
             b.NumeroDocumento = "000010333";
-            EspecieDocumento ED = new EspecieDocumento(104,"0");
+            EspecieDocumento ED = new EspecieDocumento(104, "0");
             b.EspecieDocumento = ED;
             b.ValorMulta = Convert.ToDecimal(2.55);
             b.DataMulta = b.DataVencimento;
@@ -487,6 +487,66 @@ namespace BoletoNet.Arquivo
             }
             //GeraArquivoCNAB400(new Banco(1), c, boletos, "2550661");
             GeraArquivoCNAB240(new Banco(1), c, boletos);
+        }
+        public void GeraDadosSicoob()
+        {
+            Boletos boletos = new Boletos();
+
+            DateTime vencimento = new DateTime(2003, 5, 15);
+
+            Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "3271", "13820", "7");
+            c.Codigo = "0621730";
+            c.DigitoCedente = 0;
+            //c.Convenio = 621730;
+            c.CodigoTransmissao = "";
+            c.ContaBancaria.DigitoAgencia = "9";
+            c.Carteira = "01";
+            //c.CPFCNPJ = "01924069000174";
+            //c.ContaBancaria.DigitoConta = "7";
+
+            Boleto b = new Boleto
+            {
+                NumeroDocumento = "000010397",
+                Carteira = "01",
+                NossoNumero = "12",
+                Cedente = c,
+                ValorBoleto = 515.62m,
+                Sacado = new Sacado
+                {
+                    CPFCNPJ = "356.733.598-70",
+                    Nome = "ERIC VALENZI FILARDI",
+                    Endereco = new Endereco
+                    {
+                        End = "RUA VITO LILLA",
+                        Bairro = "VILA AUGUSTA",
+                        Cidade = "GUARULHOS",
+                        CEP = "07025-040",
+                        UF = "SP"
+                    },
+                },
+                Banco = new Banco(756),
+                DataVencimento = DateTime.Now,
+                DataProcessamento = DateTime.Now,
+                DataDocumento = DateTime.Now,
+                DataMulta = DateTime.Now.AddDays(1),
+                ValorMulta = 2m,
+                PercMulta = 0m,
+                JurosMora = 0.3437m,
+                Remessa = new Remessa()
+                {
+                    //NumeroLote = i,
+                    TipoDocumento = "4",
+                    CodigoOcorrencia = "01"
+                }
+            };
+            b.EspecieDocumento = new EspecieDocumento_Sicoob("4");
+            b.Especie = "12";
+            b.ModalidadeCobranca = 1;
+            b.NumeroParcela = 1;
+            boletos.Add(b);
+
+            //GeraArquivoCNAB400(new Banco(1), c, boletos, "2550661");
+            GeraArquivoCNAB240(new Banco(756), c, boletos);
         }
         public void GeraDadosBradesco(TipoArquivo tipoArquivo)
         {
@@ -770,7 +830,10 @@ namespace BoletoNet.Arquivo
                 form.CodigoBanco = Convert.ToInt16(radioButtonBNB.Tag);
             else if (radioButtonSicredi.Checked)
                 form.CodigoBanco = Convert.ToInt16(radioButtonSicredi.Tag);
-
+            else if (radioButtonSantander.Checked)
+                form.CodigoBanco =33;
+            else if (radioButtonSicredi.Checked)
+                form.CodigoBanco = 748;
 
             form.ShowDialog();
         }
@@ -809,7 +872,7 @@ namespace BoletoNet.Arquivo
                 else if (radioButtonBradesco.Checked)
                     GeraDadosBradesco(TipoArquivo.CNAB240);
                 else if (radioButtonBancoBrasil.Checked)
-                    GeraDadosBB();
+                    GeraDadosSicoob();
             }
         }
 

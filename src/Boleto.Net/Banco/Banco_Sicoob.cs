@@ -378,13 +378,15 @@ namespace BoletoNet
                 header += Utils.FormatCode(cedente.ContaBancaria.DigitoAgencia, "0", 1);  //Posição 058 a 058 Digito Agência
                 header += Utils.FormatCode(cedente.ContaBancaria.Conta, "0", 12, true);   //Posição 059 a 070
                 header += cedente.ContaBancaria.DigitoConta;  //Posição 071 a 71
-                header += new string(' ', 1); //Posição 072 a 72     Dígito Verificador da Ag/Conta: Brancos
+                //ericvalenzi- Manual manda informar fixo 0
+                header += "0";// new string('0', 1); //Posição 072 a 72     Dígito Verificador da Ag/Conta: Brancos
                 header += Utils.FormatCode(cedente.Nome, " ", 30);  //Posição 073 a 102      Nome do Banco: SICOOB
                 header += Utils.FormatCode("SICOOB", " ", 30);     //Posição 103 a 132       Nome da Empresa
                 header += Utils.FormatCode("", " ", 10);     //Posição 133 a 142  Uso Exclusivo FEBRABAN / CNAB: Brancos
                 header += "1";        //Posição 103 a 142   Código Remessa / Retorno: "1"
                 header += DateTime.Now.ToString("ddMMyyyy");       //Posição 144 a 151       Data de Geração do Arquivo
-                header += Utils.FormatCode("", "0", 6);            //Posição 152 a 157       Hora de Geração do Arquivo
+                header += DateTime.Now.ToString("HHmmss");         //Posição 152 a 157       Hora de Geração do Arquivo - ericvalenzi
+                //header += Utils.FormatCode("", "0", 6);          //Posição 152 a 157       Hora de Geração do Arquivo
                 header += "000001";         //Posição 158 a 163     Seqüência
                 header += "081";            //Posição 164 a 166    No da Versão do Layout do Arquivo: "081"
                 header += "00000";          //Posição 167 a 171    Densidade de Gravação do Arquivo: "00000"
@@ -662,12 +664,13 @@ namespace BoletoNet
                 
                 detalhe += Utils.FormatCode(boleto.IOF.ToString(), 15);//Posição 166 a 180   -  Valor do IOF a ser Recolhido
                 detalhe += Utils.FormatCode(boleto.Abatimento.ToString(), 15);//Posição 181 a 195   - Valor do Abatimento
-                detalhe += Utils.FormatCode(boleto.NumeroDocumento, " ", 25); //Posição 196 a 220  - Identificação do título
-                detalhe += "3"; //Posição 221  - Código do protesto 3 = Nao Protestar
+                detalhe += Utils.FormatCode(boleto.NumeroDocumento, " ", 25); //Posição 196 a 220  - Identificação do título                
+                //ericvalenzi- Incluir de acordo com validação de instruções
+                //detalhe += "3"; //Posição 221  - Código do protesto 3 = Nao Protestar - eric
 
                 #region Instruções
 
-                string vInstrucao1 = "00"; //2ª instrução (2, N) Caso Queira colocar um cod de uma instrução. ver no Manual caso nao coloca 00
+                string vInstrucao1 = "300"; //2ª instrução (2, N) Caso Queira colocar um cod de uma instrução. ver no Manual caso nao coloca 00
                 foreach (IInstrucao instrucao in boleto.Instrucoes)
                 {
                     switch ((EnumInstrucoes_Sicoob)instrucao.Codigo)
@@ -675,14 +678,20 @@ namespace BoletoNet
                         case EnumInstrucoes_Sicoob.CobrarJuros:
                             vInstrucao1 = Utils.FitStringLength(instrucao.QuantidadeDias.ToString(), 2, 2, '0', 0, true, true, true);
                             break;
+                        case EnumInstrucoes_Sicoob.ProtestarNDias:
+                            vInstrucao1 = "1" + Utils.FitStringLength(instrucao.QuantidadeDias.ToString(), 2, 2, '0', 0, true, true, true);
+                            break;
+                        default:
+                            vInstrucao1 = "300";
+                            break;
                     }
                 }
 
                 #endregion
-
-                detalhe += Utils.FormatCode(vInstrucao1, 2);  //Posição 222 a 223  - Código do protesto
+                //-ericvalenzi de 222a 223 para 221 ate 223 instrucao mais dias
+                detalhe += Utils.FormatCode(vInstrucao1, 2);  //Posição 221 a 223  - Código do protesto
                 detalhe += Utils.FormatCode("0", 1);     //Posição 224  - Código para Baixa/Devolução: "0"
-                detalhe += Utils.FormatCode(" ", 3);     //Posição 225 A 227  - Número de Dias para Baixa/Devolução: Brancos
+                detalhe += "   ";// Utils.FormatCode("", 3);     //Posição 225 A 227  - Número de Dias para Baixa/Devolução: Brancos
                 detalhe += Utils.FormatCode(boleto.Moeda.ToString(), "0", 2, true); //Posição 228 A 229  - Código da Moeda
                 detalhe += Utils.FormatCode("", "0", 10, true); //Posição 230 A 239    -  Nº do Contrato da Operação de Créd.: "0000000000"
                 detalhe += " ";

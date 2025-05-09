@@ -28,7 +28,9 @@ namespace BoletoNet
 
         DevolverApos30DiasVencido = 43,
 
-        CobrarTaxaDeMulta = 9999
+        CobrarTaxaDeMulta = 9999,
+        
+        ProtestarNDias = 2
     }
     #endregion
     
@@ -93,6 +95,10 @@ namespace BoletoNet
                     case EnumInstrucoes_Sicoob.Protestar3DiasUteis:
                         this.Codigo = (int)EnumInstrucoes_Sicoob.Protestar3DiasUteis;
                         this.Descricao = "Protestar 3 dias úteis após vencimento";
+                        break;
+                    case EnumInstrucoes_Sicoob.ProtestarNDias:
+                        this.Codigo = (int)EnumInstrucoes_Sicoob.ProtestarNDias;
+                        this.Descricao = string.Format("Protestar {0} dias úteis após vencimento", nrDias);
                         break;
                     case EnumInstrucoes_Sicoob.Protestar4DiasUteis:
                         this.Codigo = (int)EnumInstrucoes_Sicoob.Protestar4DiasUteis;

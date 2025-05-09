@@ -281,7 +281,7 @@ namespace Boleto.Net.MVC.Models
 
             Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "3792", "1031", "6");
 
-            c.Codigo = "943870";
+            c.Codigo = "943870";//3792/943870
 
 
             BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 508.4300M, "1", "00000000000000004", c);
@@ -487,14 +487,14 @@ namespace Boleto.Net.MVC.Models
             DateTime vencimento = DateTime.Now.AddDays(10);
 
 
-            Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "4444", "", "", "");
+            Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "3271", "9", "13820", "7");
 
-            c.Codigo = "123456";
-            c.DigitoCedente = 7;
+            c.Codigo = "062173";
+            c.DigitoCedente = 0;
             c.Carteira = "1";
 
-            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 10, "1", "897654321", c);
-            b.NumeroDocumento = "119964";
+            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 10, "1", "0000012", c);
+            b.NumeroDocumento = "0000012";
 
             b.Sacado = new Sacado("000.000.000-00", "Nome do seu Cliente ");
             b.Sacado.Endereco.End = "Endereço do seu Cliente ";
@@ -502,6 +502,8 @@ namespace Boleto.Net.MVC.Models
             b.Sacado.Endereco.Cidade = "Cidade";
             b.Sacado.Endereco.CEP = "00000000";
             b.Sacado.Endereco.UF = "UF";
+            b.ModalidadeCobranca = 1;
+            b.TipoModalidade = "01";
 
             boletoBancario.Boleto = b;
             boletoBancario.Boleto.Valida();
@@ -512,25 +514,25 @@ namespace Boleto.Net.MVC.Models
         public BoletoBancario Sicred()
         {
 
-            DateTime vencimento = DateTime.Now.AddDays(1);
+            DateTime vencimento = Convert.ToDateTime("10/02/2022");
 
             //Instrucao_Sicredi item1 = new Instrucao_Sicredi(9, 5);
             //Instrucao_Sicredi item2 = new Instrucao_Sicredi();
 
-            Cedente c = new Cedente("01.924.069/0001-74", "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA", "0710", "07914","3");
+            Cedente c = new Cedente("01.496.359/0001-64", "PICCOLI TRANSPORTES LTDA  EPP", "0804", "73615", "5");
             c.Codigo = "07914";
             c.ContaBancaria = new ContaBancaria
             {
-                Agencia = "0710",
-                Conta = "07914",
-                DigitoAgencia = "",
-                DigitoConta = "3",
-                OperacaConta = "68"
+                Agencia = "0804",
+                Conta = "73615",
+                DigitoAgencia = "0",
+                DigitoConta = "5",
+                OperacaConta = "22"
             };
 
-
-            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 0.1m, "1", "000011", c);
-            b.NumeroDocumento = "000011";
+            boletoBancario.CodigoBanco = 748;
+            BoletoNet.Boleto b = new BoletoNet.Boleto(vencimento, 707.88m, "1", "233628", c);
+            b.NumeroDocumento = "233628";
 
 
 

@@ -124,7 +124,7 @@ namespace BoletoNet.Arquivo
         }
         #endregion
 
-        #region BOLETO Caixa
+        #region BOLETO Sicredi
         private void GeraBoletoSicredi(int qtde)
         {
             // Cria o boleto, e passa os parâmetros usuais
@@ -139,34 +139,37 @@ namespace BoletoNet.Arquivo
                 bb.MostrarEnderecoCedente = true;                
                 bb.FormatoCarne = true;
                 bb.OcultarInstrucoes = true;
-                DateTime vencimento = DateTime.Now.AddDays(10);
+                DateTime vencimento = Convert.ToDateTime("2025-02-18");
 
-                Instrucao_Sicredi item1 = new Instrucao_Sicredi((int)EnumInstrucoes_Sicredi.AlteracaoOutrosDados_Desconto, (Double)50.90, AbstractInstrucao.EnumTipoValor.Reais);
+                //Instrucao_Sicredi item1 = new Instrucao_Sicredi((int)EnumInstrucoes_Sicredi.AlteracaoOutrosDados_Desconto, (Double)50.90, AbstractInstrucao.EnumTipoValor.Reais);
               
              
-                Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0132", "00542");
-                c.Codigo = "01321000542";
-                c.ContaBancaria.Agencia = "0132";               
-                c.ContaBancaria.Conta = "00542";
-                c.ContaBancaria.OperacaConta = "10";
+                Cedente c = new Cedente("35.774.778/0001-32", "breviis transportes ltda ", "0726", "28669", "2");
+                c.Codigo = "28669";
+                c.ContaBancaria.Agencia = "0726";
+                c.ContaBancaria.DigitoAgencia = "0";
+                c.ContaBancaria.Conta = "28669";
+                c.ContaBancaria.DigitoConta = "2";
+                c.ContaBancaria.OperacaConta = "42";
 
-                Boleto b = new Boleto(vencimento, Convert.ToDecimal(1460), "1", "17200001" , c, new EspecieDocumento(_codigoBanco, "A"));
-               
-                Endereco endCed = new Endereco();
+                Boleto b = new Boleto(vencimento, Convert.ToDecimal(6720), "1", "201170", c);
+                //
 
-                b.NumeroParcela = 1;
-                b.TotalParcela = 10;
-                b.TipoImpressao = "B";
+                //Endereco endCed = new Endereco();
+
+                //b.NumeroParcela = 1;
+                //b.TotalParcela = 10;
+                //b.TipoImpressao = "B";
 
 
-                endCed.End = "Rua Testando o Boleto";
-                endCed.Bairro = "BairroTest";
-                endCed.Cidade = "CidadeTes";
-                endCed.CEP = "70000000";
-                endCed.UF = "MG";
-                b.Cedente.Endereco = endCed;
+                //endCed.End = "Rua Testando o Boleto";
+                //endCed.Bairro = "BairroTest";
+                //endCed.Cidade = "CidadeTes";
+                //endCed.CEP = "70000000";
+                //endCed.UF = "MG";
+                //b.Cedente.Endereco = endCed;
 
-                b.NumeroDocumento = "1001";
+                //b.NumeroDocumento = "1001";
 
                 b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
                 b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
@@ -174,8 +177,8 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.Cidade = "Testelândia";
                 b.Sacado.Endereco.CEP = "70000000";
                 b.Sacado.Endereco.UF = "DF";
-                b.Instrucoes.Add(item1);
-              
+                //b.Instrucoes.Add(item1);
+
 
                 bb.Boleto = b;
                 bb.Boleto.Valida();
@@ -676,6 +679,9 @@ namespace BoletoNet.Arquivo
                 case 748:
                     GeraBoletoSicredi((int)numericUpDown.Value);
                     break;
+                case 33:
+                    GeraBoletoSantander((int)numericUpDown.Value);
+                    break;
             }
 
         }
@@ -690,6 +696,47 @@ namespace BoletoNet.Arquivo
 
         }
         #endregion Eventos do BackgroundWorker
+
+        #region BOLETO Santander
+        private void GeraBoletoSantander(int qtde)
+        {
+            // Cria o boleto, e passa os parâmetros usuais
+            BoletoBancario bb;
+
+            List<BoletoBancario> boletos = new List<BoletoBancario>();
+            for (int i = 0; i < qtde; i++)
+            {
+
+                bb = new BoletoBancario();
+                bb.CodigoBanco = _codigoBanco;
+
+                DateTime vencimento =Convert.ToDateTime("20250221");
+
+                //Instrucao_Itau item1 = new Instrucao_Itau(9, 5);
+                //Instrucao_Itau item2 = new Instrucao_Itau(81, 10);
+                Cedente c = new Cedente("21.934.388/0001-78", "FLEXLOG TRANSPORTES EIRELI - ME", "4538", "130044057", "0");
+                //Na carteira 198 o código do Cedente é a conta bancária
+                c.Codigo = "284740";
+
+                Boleto b = new Boleto(vencimento, 335.74m, "101", 66033.ToString().PadLeft(11, '0'), c);
+                b.EspecieDocumento = new EspecieDocumento_Santander("17");
+                b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
+                b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
+                b.Sacado.Endereco.Bairro = "Testando";
+                b.Sacado.Endereco.Cidade = "Testelândia";
+                b.Sacado.Endereco.CEP = "70000000";
+                b.Sacado.Endereco.UF = "DF";
+                
+
+                bb.Boleto = b;
+                bb.Boleto.Valida();
+
+                boletos.Add(bb);
+            }
+
+            GeraLayout(boletos);
+        }
+        #endregion
 
 
 
