@@ -1183,7 +1183,11 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0053, 005, 0, cedente.ContaBancaria.Agencia, '0'));                // posição 53 até 57   (5) - Agência Mantenedora da Conta
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0058, 001, 0, cedente.ContaBancaria.DigitoAgencia.ToUpper(), ' '));// posição 58 até 58   (1) - Dígito Verificador da Agência
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0059, 006, 0, cedente.Convenio, '0'));                             // posição 59 até 64   (6) - Código do Convênio no Banco (Código do Cedente)
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0065, 007, 0, "0", '0'));                                          // posição 65 até 71   (7) - Uso Exclusivo CAIXA
+                // Adaptação para codigo de cedente com 7 digitos -  ericvalenzi
+                if (cedente.Convenio.ToString().Length > 6)
+                    reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0065, 006, 0, "0", '0'));                                          // posição 65 até 71   (7) - Uso Exclusivo CAIXA
+                else
+                    reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0065, 007, 0, "0", '0'));                                          // posição 65 até 71   (7) - Uso Exclusivo CAIXA
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0072, 001, 0, "0", '0'));                                          // posição 72 até 72   (1) - Uso Exclusivo CAIXA
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0073, 030, 0, cedente.Nome.ToUpper(), ' '));                       // posição 73 até 102  (30)- Nome da Empresa
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0103, 030, 0, "CAIXA ECONOMICA FEDERAL", ' '));                    // posição 103 até 132 (30)- Nome do Banco
@@ -1234,11 +1238,19 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0018, 001, 0, vCpfCnpjEmi, '0'));                                   // posição 18 até 18   (1) - Tipo de Inscrição 
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0019, 015, 0, cedente.CPFCNPJ, '0'));                               // posição 19 até 33   (15)- Número de Inscrição da empresa
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0034, 006, 0, cedente.Convenio, '0'));                              // posição 34 até 39   (6) - Código do Convênio no Banco
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0040, 014, 0, "0", '0'));                                           // posição 40 até 53   (14)- Uso Exclusivo CAIXA
+                // Adaptação para codigo de cedente com 7 digitos -  ericvalenzi
+                if (cedente.Convenio.ToString().Length > 6)
+                    reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0040, 013, 0, "0", '0'));                                       // posição 40 até 53   (14)- Uso Exclusivo CAIXA
+                else
+                    reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0040, 014, 0, "0", '0'));                                       // posição 40 até 53   (14)- Uso Exclusivo CAIXA
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0054, 005, 0, cedente.ContaBancaria.Agencia, '0'));                 // posição 54 até 58   (5) - Agência Mantenedora da Conta
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0059, 001, 0, cedente.ContaBancaria.DigitoAgencia.ToUpper(), ' ')); // posição 59 até 59   (1) - Dígito Verificador da Agência
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0060, 006, 0, cedente.Convenio, '0'));                              // posição 60 até 65   (6) - Código do Convênio no Banco                
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0066, 007, 0, "0", '0'));                                           // posição 66 até 72   (7) - Código do Modelo Personalizado
+                // Adaptação para codigo de cedente com 7 digitos -  ericvalenzi
+                if (cedente.Convenio.ToString().Length > 6)
+                    reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0066, 006, 0, "0", '0'));                                       // posição 66 até 72   (7) - Código do Modelo Personalizado
+                else
+                    reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0066, 007, 0, "0", '0'));                                       // posição 66 até 72   (7) - Código do Modelo Personalizado
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0073, 001, 0, "0", '0'));                                           // posição 73 até 73   (1) - Uso Exclusivo CAIXA
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0074, 030, 0, cedente.Nome.ToUpper(), ' '));                        // posição 73 até 103  (30)- Nome da Empresa     
                 //TODO.: ROGER KLEIN - INSTRUÇÕES NÃO TRATADAS
@@ -1310,7 +1322,11 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0018, 005, 0, cedente.ContaBancaria.Agencia, '0'));                 // posição 18 até 22   (5) - Agência Mantenedora da Conta
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0023, 001, 0, cedente.ContaBancaria.DigitoAgencia.ToUpper(), ' ')); // posição 23 até 23   (1) - Dígito Verificador da Agência
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0024, 006, 0, cedente.Convenio, '0'));                              // posição 24 até 29   (6) - Código do Convênio no Banco
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0030, 011, 0, "0", '0'));                                           // posição 30 até 40   (11)- Uso Exclusivo CAIXA
+                // Adaptação para codigo de cedente com 7 digitos -  ericvalenzi
+                if (cedente.Convenio.ToString().Length > 6)
+                    reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0030, 010, 0, "0", '0'));                                           // posição 30 até 40   (11)- Uso Exclusivo CAIXA
+                else
+                    reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0030, 011, 0, "0", '0'));                                           // posição 30 até 40   (11)- Uso Exclusivo CAIXA
                 //modalidade são os dois algarimos iniciais do nosso número...                
                 //nosso numero já traz a modalidade concatenada, então passa direto o nosso nro que preenche os dois campos do leiaute
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0041, 017, 0, boleto.NossoNumero, '0'));                            // posição 41 até 57   (15)- Identificação do Título no Banco
@@ -1893,49 +1909,49 @@ namespace BoletoNet
                             reg.IdentificacaoTituloCaixa_NossoNumero.Length - 1),
                     MotivosRejeicao = reg.CodigoMotivoRejeicao,
                     Carteira = reg.CodigoCarteira,
-                    CodigoOcorrencia = !string.IsNullOrEmpty(reg.CodigoOcorrencia ) ? 
-                        Utils.ToInt32(reg.CodigoOcorrencia) 
+                    CodigoOcorrencia = !string.IsNullOrEmpty(reg.CodigoOcorrencia) ?
+                        Utils.ToInt32(reg.CodigoOcorrencia)
                         : 0,
-                    DataOcorrencia = !string.IsNullOrEmpty(reg.DataOcorrencia) ? 
+                    DataOcorrencia = !string.IsNullOrEmpty(reg.DataOcorrencia) ?
                         Utils.ToDateTime(Utils.ToInt32(reg.DataOcorrencia).ToString("##-##-##"))
                         : DateTime.MinValue,
                     NumeroDocumento = reg.NumeroDocumento,
 
-                    DataVencimento = !string.IsNullOrEmpty(reg.DataVencimentoTitulo) ? 
+                    DataVencimento = !string.IsNullOrEmpty(reg.DataVencimentoTitulo) ?
                         Utils.ToDateTime(Utils.ToInt32(reg.DataVencimentoTitulo).ToString("##-##-##"))
                         : DateTime.MinValue,
-                    ValorTitulo = !string.IsNullOrEmpty(reg.ValorTitulo) ? 
-                        Convert.ToDecimal(reg.ValorTitulo) /100
+                    ValorTitulo = !string.IsNullOrEmpty(reg.ValorTitulo) ?
+                        Convert.ToDecimal(reg.ValorTitulo) / 100
                         : 0,
-                    CodigoBanco = !string.IsNullOrEmpty(reg.CodigoBancoCobrador) ? 
-                        Utils.ToInt32(reg.CodigoBancoCobrador) 
+                    CodigoBanco = !string.IsNullOrEmpty(reg.CodigoBancoCobrador) ?
+                        Utils.ToInt32(reg.CodigoBancoCobrador)
                         : 0,
-                    AgenciaCobradora = !string.IsNullOrEmpty(reg.CodigoAgenciaCobradora) ? 
-                        Utils.ToInt32(reg.CodigoAgenciaCobradora) 
+                    AgenciaCobradora = !string.IsNullOrEmpty(reg.CodigoAgenciaCobradora) ?
+                        Utils.ToInt32(reg.CodigoAgenciaCobradora)
                         : 0,
-                    ValorDespesa = !string.IsNullOrEmpty(reg.ValorDespesasCobranca) ? 
+                    ValorDespesa = !string.IsNullOrEmpty(reg.ValorDespesasCobranca) ?
                         (Convert.ToDecimal(reg.ValorDespesasCobranca) / 100)
-                        : 0 ,
+                        : 0,
                     OrigemPagamento = reg.TipoLiquidacao,
-                    IOF = !string.IsNullOrEmpty(reg.ValorIOF) ? 
+                    IOF = !string.IsNullOrEmpty(reg.ValorIOF) ?
                         (Convert.ToDecimal(reg.ValorIOF) / 100)
-                        : 0 ,
-                    ValorAbatimento = !string.IsNullOrEmpty(reg.ValorAbatimentoConcedido) ? 
+                        : 0,
+                    ValorAbatimento = !string.IsNullOrEmpty(reg.ValorAbatimentoConcedido) ?
                         (Convert.ToDecimal(reg.ValorAbatimentoConcedido) / 100)
                         : 0,
-                    Descontos = !string.IsNullOrEmpty(reg.ValorDescontoConcedido) ? 
+                    Descontos = !string.IsNullOrEmpty(reg.ValorDescontoConcedido) ?
                         (Convert.ToDecimal(reg.ValorDescontoConcedido) / 100)
                         : 0,
-                    ValorPago = !string.IsNullOrEmpty(reg.ValorPago) ? 
+                    ValorPago = !string.IsNullOrEmpty(reg.ValorPago) ?
                         Convert.ToDecimal(reg.ValorPago) / 100
-                        : 0 ,
-                    JurosMora = !string.IsNullOrEmpty(reg.ValorJuros) ? 
+                        : 0,
+                    JurosMora = !string.IsNullOrEmpty(reg.ValorJuros) ?
                         (Convert.ToDecimal(reg.ValorJuros) / 100)
                         : 0,
-                    TarifaCobranca = !string.IsNullOrEmpty(reg.ValorDespesasCobranca) ? 
+                    TarifaCobranca = !string.IsNullOrEmpty(reg.ValorDespesasCobranca) ?
                         (Convert.ToDecimal(reg.ValorDespesasCobranca) / 100)
-                        : 0 ,
-                    DataCredito = !string.IsNullOrEmpty(reg.DataCreditoConta) ? 
+                        : 0,
+                    DataCredito = !string.IsNullOrEmpty(reg.DataCreditoConta) ?
                         Utils.ToDateTime(Utils.ToInt32(reg.DataCreditoConta).ToString("##-##-##"))
                         : DateTime.MinValue,
 

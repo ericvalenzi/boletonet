@@ -331,17 +331,19 @@ namespace BoletoNet.Arquivo
         {
             ContaBancaria conta = new ContaBancaria();
             conta.OperacaConta = "OPE";
-            conta.Agencia = "3792";
-            conta.DigitoAgencia = "0";
-            conta.Conta = "1031";
-            conta.DigitoConta = "6";
+            conta.Agencia = "0928";
+            conta.DigitoAgencia = "8";
+            conta.Conta = "579150458";
+            conta.DigitoConta = "2";
             //
             Cedente c = new Cedente();
             c.ContaBancaria = conta;
             c.CPFCNPJ = "01.924.069/0001-74";
             c.Nome = "BRUCAI TRANSPORTES E ARMAZEM GERAIS LTDA";
+            c.Convenio = 1256118;
             //Na carteira 198 o código do Cedente é a conta bancária
             c.Codigo = String.Concat(conta.Agencia, conta.DigitoAgencia, conta.OperacaConta, conta.Conta, conta.DigitoConta); //Na Caixa, esse código está no manual como 16 caracteres AAAAOOOCCCCCCCCD;
+            c.NumeroSequencial = 1;
             //
             Boleto b = new Boleto();
             b.Cedente = c;
@@ -373,7 +375,7 @@ namespace BoletoNet.Arquivo
 
             #region Dados para Remessa:
             b.Remessa = new Remessa();
-            b.Remessa.TipoDocumento = "2"; // SIGCB - SEM REGISTRO
+            b.Remessa.TipoDocumento = "1"; // SIGCB - SEM REGISTRO
             //b.Remessa.CodigoOcorrencia = string.Empty;
             #endregion
 
